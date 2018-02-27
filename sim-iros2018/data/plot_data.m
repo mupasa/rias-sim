@@ -3,75 +3,52 @@
 % 2/19/2018
 clear; close all; clc;
 
-%% Import Data
-load 2_17_2018_data.mat; % Will generate robotarium_data
+% Import Data
+load 2_26_2018_rundata.mat
+[lim_row, lim_col] = size(data.pose);
+N = data.N;
+disp(data)
 
-
-%% Run Detection System
-[lim_row, lim_col] = size(robotarium_data);
-t_s = 50;
-t = linspace(0,lim_col/t_s,lim_col);
-
-goal = [1 1 1];
-i_atk = 4;
-
-
-%% Generate Figure
-lineW = 1.2;
+% General Settings
+lineW = 1.3;
 axisS = 15;
-labelS = 15;
+labelS = 17;
 
-% Trajectory of all the agents
-figure; 
-hold on;
-j = 1;
-while j < lim_row
-    plot(robotarium_data(j,:),robotarium_data(j+1,:),'LineWidth',lineW);
-    j = j + 5;
-end
-hold off;
+t_test = 45; % Actual test time (sec)
+t = linspace(0,t_test,lim_row/3);
 
-grid on; axis([-1.5 1.5 -1.5 1.5]);
-legend({'R1','R2','R3','R4','R5','R6','R7','R8'},'Location','Northwest','FontSize',labelS);
-xlabel('x [meter]','FontSize',labelS); ylabel('y [meter]','FontSize',labelS)
-
-% Tracking error
+% Trajectory of all agents
 figure;
-subplot(3,1,1) % x_d - x
-plot(t,goal(1)-robotarium_data(5*i_atk-4,:),'LineWidth',lineW)
-grid on; axis([0 60 -2.5 2.5]);
-xlabel('t (sec)','FontSize',labelS); ylabel('x error (meter)','FontSize',labelS)
+hold on
+for k = 1:N
+    plot(data.pose(1:3:lim_row,k),data.pose(2:3:lim_row,k),'LineWidth',lineW);
+    plot(data.pose(end-2,k),data.pose(end-1,k),'b^','LineWidth',lineW)
+    text(data.pose(end-2,k)+0.03,data.pose(end-1,k)+0.03,...
+        sprintf('%d',k),'FontSize',labelS)
+end
+plot(data.pose(1:3:lim_row,data.att_agent(1)),...
+    data.pose(2:3:lim_row,data.att_agent(1)),'m','LineWidth',lineW);
+plot(data.pose(1:3:lim_row,data.att_agent(2)),...
+    data.pose(2:3:lim_row,data.att_agent(2)),'g','LineWidth',lineW);
+plot(data.pose(1:3:lim_row,data.att_agent(3)),...
+    data.pose(2:3:lim_row,data.att_agent(3)),'k','LineWidth',lineW);
+plot(data.pose(end-2,data.att_agent),data.pose(end-1,data.att_agent),...
+        'r^','LineWidth',lineW)
+hold off;
+grid on; axis([-1 1 -1 1]); ax = gca; ax.FontSize = axisS;
+xlabel('x (m)','FontSize',labelS); ylabel('y (m)','FontSize',labelS)
 
-subplot(3,1,2) % y_d - y
-plot(t,goal(2)-robotarium_data(5*i_atk-3,:),'LineWidth',lineW)
-grid on; axis([0 60 -2.5 2.5]);
-xlabel('t (sec)','FontSize',labelS); ylabel('y error (meter)','FontSize',labelS)
+% Tracking error of all agents
+figure;
+for i = 1:N
+subplot(2,1,1) % x_d - x
+plot(t,data.goal(1,i)-data.pose(1:3:lim_row,i),'LineWidth',lineW)
+hold on; grid on; axis([0 45 -2 2]); ax = gca; ax.FontSize = axisS;
+ylabel('x error (m)','FontSize',labelS)
 
-subplot(3,1,3) % theta_d - theta
-plot(t,goal(3)-robotarium_data(5*i_atk-2,:),'LineWidth',lineW)
-grid on;
-xlabel('t (sec)','FontSize',labelS); ylabel('heading error (rad)','FontSize',labelS)
-
-% % Test statistic
-% figure;
-% subplot(3,1,1) % S_x(k)
-% plot(t,robotarium_data(5*i_atk-4,:),'LineWidth',lineW)
-% grid on; axis([0 60 -1.5 1.5]);
-% xlabel('t (sec)','FontSize',labelS); ylabel('S_{x}(k)','FontSize',labelS)
-% 
-% subplot(3,1,2) % S_y(k)
-% plot(t,robotarium_data(5*i_atk-4,:),'LineWidth',lineW)
-% grid on; axis([0 60 -1.5 1.5]);
-% xlabel('t (sec)','FontSize',labelS); ylabel('S_{y}(k)','FontSize',labelS)
-% 
-% subplot(3,1,3) % S_theta(k)
-% plot(t,robotarium_data(5*i_atk-4,:),'LineWidth',lineW)
-% grid on; axis([0 60 -1.5 1.5]);
-% xlabel('t (sec)','FontSize',labelS); ylabel('S_{\theta}(k)','FontSize',labelS)
-
-% Trajectory of the agent with attack
-% figure;
-% plot(robotarium_data(5*i_atk-4,:),robotarium_data(5*i_atk-3,:),'LineWidth',lineW)
-% grid on; axis([-1.5 1.5 -1.5 1.5]);
-% legend({sprintf('R%d\n',i_atk)},'Location','Northwest','FontSize',labelS);
-% xlabel('x [meter]','FontSize',labelS); ylabel('y [meter]','FontSize',labelS)
+subplot(2,1,2) % y_d - y
+plot(t,data.goal(2,i)-data.pose(2:3:lim_row,i),'LineWidth',lineW)
+hold on; grid on; axis([0 45 -2 2]); ax = gca; ax.FontSize = axisS;
+xlabel('time (s)','FontSize',labelS); ylabel('y error (m)','FontSize',labelS)
+end
+hold off

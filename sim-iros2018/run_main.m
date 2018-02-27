@@ -89,14 +89,13 @@ end
 r.call_at_scripts_end();
 
 %% Generate Figure
-save temp/rundata.mat data
+save rundata.mat data
 [lim_row, lim_col] = size(data.pose);
 
 hold on
-
 for k = 1:N
     plot(data.pose(1:3:lim_row,k),data.pose(2:3:lim_row,k));
+    text(data.pose(end-2,k)+0.03,data.pose(end-1,k)+0.03,...
+        sprintf('%d',k),'FontSize',10)
 end
-
 hold off
-legend('box','1','2','3','4','5','6','7','8');

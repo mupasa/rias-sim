@@ -8,7 +8,7 @@ clear; close all; clc;
 
 
 %% Vehicle parameters
-Ts = 0.01;  % Sample time (sec)
+Ts = 0.1;  % Sample time (sec)
 
 %% State
 % State vector.
