@@ -6,13 +6,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; close all; clc;
 
-for j = 1:6
+for j = 1:10
 %% General Settings
 Ts = 0.1;  % Sample time (sec)
-i_rob = [ 3  5  6  7   9 10];
-i_att = [ 2  2  2  2   2 1 ]; % attack state (1 or 2)
-t_att = [ 7 30  7  7  10 7 ]; % attack time (sec)
-m_att = [ 6  2  2  4   1 2 ]; % attack magnitude (m)
+i_rob = [ 1  2  3  4  5  6  7  8  9 10];
+i_att = [ 2  2  2  2  2  2  2  2  2  1]; % attack state (1 or 2)
+t_att = [15  7  7  4 22  3  7 10 11  7]; % attack time (sec)
+m_att = [ 1 -2  6 -1  1  1  7 .5  1  2]; % attack magnitude (m)
 
 %% State
 % State vector.
