@@ -132,6 +132,11 @@ plot(t,xSigEst(i_att(j),:),'b',...
 grid on; axis([0 45 -inf inf]); ax = gca; ax.FontSize = axisS;
 xlabel('time (s)','Fontsize',labelS); ylabel('S(k)','Fontsize',labelS);
 
+%% Save the data
+xEst_plot{j} = [xSigEst(i_att(j),:) ; fMean ; fSTD];
 end
 
 legend({'test statistics','threshold'},'Location','Northwest','FontSize',labelS)
+
+%% Plot Annimation
+run plot_ani_stat.m % test stats

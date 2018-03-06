@@ -52,3 +52,7 @@ hold on; grid on; axis([0 45 -2 2]); ax = gca; ax.FontSize = axisS;
 xlabel('time (s)','FontSize',labelS); ylabel('y error (m)','FontSize',labelS)
 end
 hold off
+
+%% Plot Annimation
+run plot_ani_traj.m % trajectory
+%run plot_ani_stat.m % test stats
