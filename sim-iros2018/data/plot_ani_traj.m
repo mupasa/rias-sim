@@ -1,6 +1,6 @@
 % Test Data Annimation Plot
 % Sangjun Lee
-% 3/2/2018
+% 3/5/2018
 
 % Main
 figure;
