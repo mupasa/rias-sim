@@ -1,0 +1,348 @@
+<div ng-controller="LocalComputer">
+    <div class="container" style="margin-top: 15px; ">
+        <div class="panel panel-default col-sm-11 dator-inner-panel">
+
+            <div class="panel panel-default">
+                <div class="panel-heading" style="margin-top:10px">
+                    <div class="panel-title">
+                        <span ng-click="toggleVar('editComputer');" style="cursor:pointer">
+                            <span class="fa fa-edit"/>
+                        </span>
+                        Local Computer {{ localComputer.name }} -
+                        <small>({{ localComputer.id }})</small>
+                        <span class="pull-right">
+                            <i ng-show="localComputer.is_running" class="fa fa-cog fa-spin" style="color: greenyellow;"></i>
+                            <span ng-show="localComputer.is_running"> Running</span>
+                            <i ng-hide="localComputer.is_running" class="fa fa-cog" style="color: yellow;"></i>
+                            <span ng-hide="localComputer.is_running"> Stopped</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body" ng-show="uiState.editComputer">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Name</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" ng-model="localComputer.name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Poll Interval (sec)</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" type="text" ng-model="localComputer.command_refresh_sec">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">UUID</label>
+
+                            <div class="col-sm-10">
+                                <input class="form-control" readonly type="text" ng-model="localComputer.uuid">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success" ng-click="saveComputer()" ng-confirm-click="Update computer settings?">Update</button>
+                        <button class="btn btn-warning" ng-click="stopComputer()">Shut Down</button>
+                        <a class="btn btn-primary" href="/dator/#/">Main Page</a>
+                    </form>
+                </div>
+
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <span ng-click="toggleVar('showPrograms');" style="cursor:pointer">
+                            <span ng-class="toggleStateClass(uiState.showPrograms);"/>
+                        </span>
+                        <span>
+                            Programs
+                        </span>
+                        <small>({{ uiState.programsCount }})</small>
+                    </div>
+                </div>
+                <div class="panel-body" ng-show="uiState.showPrograms">
+                    <div class="row">
+                        <button ng-click="newProgram()">
+                            <i class="fa fa-plus" style="color: black; background-color: transparent;"></i>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th class="text-center">Start</th>
+                                        <th class="text-center">Stop</th>
+                                        <th class="text-center">Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="program in programs">
+                                        <td>{{ program.id }}</td>
+                                        <td><a href="/dator/#/editor/{{ program.id }}">{{ program.name }}</a>
+                                        </td>
+                                        <td>
+                                            <button class="center-block" ng-click="loadProgram(program.id)" style="background-color: transparent; color: transparent;">
+                                                <i class="fa fa-play" style="color: greenyellow; background-color: transparent;"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="center-block" ng-click="stopProgram(program.id)" style="background-color: transparent; color: transparent;">
+                                                <i class="fa fa-stop" style="color: orange; background-color: transparent;"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button class="center-block" ng-click="deleteProgram(program.id)"
+                                                    ng-confirm-click="Delete Program?" style="color: red;">
+                                                <b>x</b>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default dator-inner-panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Data
+                        <div class="form-group pull-right">
+                            <!-- <a href="{{ uiState.experiment.experiment_link }}"/> -->
+                        <label class="small dator-spaced-title">Media</label>
+                        <a type="button" class="btn btn-link" role="link" name="op" value="{{ uiState.experiment.media_link }}"
+                           href="{{ uiState.experiment.media_link }}"><p style="overflow:hidden;text-overflow:ellipsis;max-width:200px">{{ uiState.experiment.media_link }}</p></a>
+
+
+                        <button type="button" data-toggle="modal" data-target="#myModal" data-link="media">
+                            <i class="fa fa-plus" style="color: black; background-color: transparent;"></i>
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">Update media link</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="media-link" class="form-control-label">Media link:</label>
+                                                <input type="text" class="form-control" id="media-link">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary" id="save-media" ng-click="save_media_link()" data-dismiss="modal">Save Changes</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <label class="small dator-spaced-title">Experiment</label>
+                        <select name="experiment"
+                                ng-model="uiState.experiment"
+                                ng-options="experiment.name for experiment in experimentChoices track by experiment.id"
+                                ng-change="filterExperiment()"
+                                class="dator-spaced-title"
+                                style="color: black;"></select>
+                            <button ng-click="deleteExperiment()">
+                            <i class="fa fa-minus" style="color: black; background-color: transparent;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-body">
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                        <span ng-click="toggleVar('showSignals');" style="cursor:pointer">
+                            <span ng-class="toggleStateClass(uiState.showSignals);"/>
+                        </span>
+                        <span>
+                            Signals
+                        </span>
+                                <small>({{ uiState.signalsCount }})</small>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-show="uiState.showSignals">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>UUID</th>
+                                            <th class="text-center">Display graph</th>
+                                            <th class="text-center">Get JSON</th>
+                                            <th class="text-center">Get CSV</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="signal in signals">
+                                            <td>{{ signal.id }}</td>
+                                            <td>{{ signal.name }}</td>
+                                            <td>{{ signal.uuid }}</td>
+                                            <td class="text-center">
+                                                <button ng-click="displaySignal(signal.id)" style="text-align: center; background-color: transparent; color: transparent;">
+                                                    <i class="fa fa-area-chart" style="color: greenyellow; background-color: transparent;"></i>
+                                                </button>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="/data_api/v1/signal/{{ signal.id }}/" style="background-color: transparent; color: transparent;">
+                                                    <i class="fa fa-download" style="color: greenyellow; background-color: transparent;"> </i>
+                                                </a>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <a href="/data_api/v1/signal/{{ signal.id }}/?format=csv" style="background-color: transparent; color: transparent;">
+                                                    <i class="fa fa-download" style="color: greenyellow; background-color: transparent;"> </i>
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                        <span ng-click="toggleVar('showBlobs');" style="cursor:pointer">
+                            <span ng-class="toggleStateClass(uiState.showBlobs);"/>
+                        </span>
+                        <span>
+                            Blobs
+                        </span>
+                                <small>({{ uiState.blobCount }})</small>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-show="uiState.showBlobs">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Mime Type</th>
+                                            <th>UUID</th>
+                                            <th class="text-center">Get Blob</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                         <tr ng-repeat="blob in blobs">
+                                            <td>{{ blob.id }}</td>
+                                            <td>{{ blob.name }}</td>
+                                            <td>{{ blob.mime_type }}</td>
+                                            <td>{{ blob.uuid }}</td>
+
+                                            <td class="text-center">
+                                                <a href="/data_api/v1/blob/{{ blob.id }}/" style="background-color: transparent; color: transparent;">
+                                                    <i class="fa fa-download" style="color: greenyellow; background-color: transparent;"> </i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                        <span ng-click="toggleVar('showSettings');" style="cursor:pointer">
+                            <span ng-class="toggleStateClass(uiState.showSettings);"/>
+                        </span>
+                        <span>
+                            Settings
+                        </span>
+                                <small>({{ uiState.settingsCount }})</small>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-show="uiState.showSettings">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Key</th>
+                                            <th>Value</th>
+                                            <th>UUID</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="setting in settings">
+                                            <td>{{ setting.key }}</td>
+                                            <td>{{ setting.value }}</td>
+                                            <td>{{ setting.uuid }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                        <span ng-click="toggleVar('showEvents');" style="cursor:pointer">
+                            <span ng-class="toggleStateClass(uiState.showEvents);"/>
+                        </span>
+                        <span>
+                            Events
+                        </span>
+                                <small>({{ uiState.eventCount }})</small>
+                            </div>
+                        </div>
+                        <div class="panel-body" ng-show="uiState.showEvents">
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Created At</th>
+                                            <th>Info</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="event in events">
+                                            <td>{{ event.type }}</td>
+                                            <td>{{ event.created_at }}</td>
+                                            <td>{{ event.info }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

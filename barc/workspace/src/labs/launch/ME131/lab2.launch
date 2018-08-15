@@ -1,0 +1,19 @@
+<launch>
+    <!-- SYSTEM MODEL -->
+    <!-- vehicle parameters -->
+    <param name="mass" type="double" value="2000" />
+
+    <!-- control parameters -->
+    <param name="air_drag_coeff" type="double" value="0.01308" />
+    <param name="friction" type="double" value="0.01711" />
+
+
+    <!-- Controller -->
+    <node pkg="labs" type="controller.py" name="pid" />
+
+    <!-- Simulator -->
+    <node pkg="labs" type="vehicle_simulator.py" name="simulator" />
+
+    <!-- Record the experiment data -->
+    <node pkg="rosbag" type="record" name="rosbag_record" args="-o /home/me131/ -a" />
+</launch>

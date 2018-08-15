@@ -1,0 +1,9 @@
+.DS_Store
+jackal.pdf
+jackal-manual-*.pdf
+*.aux
+*.log
+*.toc
+*.out
+*.swp
+*.gz

@@ -3,7 +3,6 @@
 % 3/2/2018
 
 % Main
-k = 10; % [3 7 10]
 figure;
 plot(-5,0,'k',...
     [t nan t],[xEst_plot{k}(2,:)+3*xEst_plot{k}(3,:)...

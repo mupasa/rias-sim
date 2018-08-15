@@ -139,4 +139,5 @@ end
 legend({'test statistics','threshold'},'Location','Northwest','FontSize',labelS)
 
 %% Plot Annimation
+k = 10; % [3 7 10]
 run plot_ani_stat.m % test stats
