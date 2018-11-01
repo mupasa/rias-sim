@@ -9,7 +9,7 @@
  *
  * Model version              : 1.84
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Thu Nov  1 11:28:40 2018
+ * C++ source code generated on : Thu Nov  1 12:31:15 2018
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -23,7 +23,7 @@
  * Code generation for Simulink model "robotROSFeedbackControlExample".
  *
  * Simulink Coder version                : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Thu Nov  1 11:28:40 2018
+ * C++ source code generated on : Thu Nov  1 12:31:15 2018
  *
  * Note that the generated code is not dependent on this header file.
  * The file is used in cojuction with the automatic build procedure.
