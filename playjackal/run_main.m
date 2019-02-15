@@ -11,7 +11,7 @@ clear; close all; clc;
 %% Initial Configuration on Jackal
 % Connect to network with a static ip address
 % Add the following lines to the .bashrc file
-% export ROS_IP=192.168.1.118rost
+% export ROS_IP=192.168.1.118
 % export ROS_MASTER_URI=http://192.168.1.118:11311
 
 %% Initial Configuration on MATLAB
